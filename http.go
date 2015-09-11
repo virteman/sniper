@@ -26,7 +26,13 @@ func (m *Message) buildHeader() {
 	if path == "" {
 		path = "/"
 	}
-	line := fmt.Sprintf("%s%s%s", config.Basic.method+" ", path+"?"+config.Basic.target[0].param+" ", config.Protocol.version+"\r\n")
+	var pathPar string
+	if config.Basic.target[0].param:{
+		pathPar = path+"?"+config.Basic.target[0].param+" "
+	} else {
+		pathPar = path+" "
+	}
+	line := fmt.Sprintf("%s%s%s", config.Basic.method+" ", pathPar, config.Protocol.version+"\r\n")
 	msg = msg + line
 
 	//host
@@ -53,11 +59,11 @@ func (m *Message) buildHeader() {
 	//post
 	if config.Basic.method == "POST" {
 		//content-length
-		line = "Content-Length :" + strconv.Itoa(len(config.Command.postData)) + "\r\n"
+		line = "Content-Length: " + strconv.Itoa(len(config.Command.postData)) + "\r\n"
 		msg = msg + line
 
 		//content-type
-		line = "Content-Type :" + config.Command.contentType + "\r\n"
+		line = "Content-Type: " + config.Command.contentType + "\r\n"
 		msg = msg + line
 	}
 
